@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ViewFilter</title>
+    <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body>
+    <main class="popup">
+        <header class="header">
+            <h1>ViewFilter</h1>
+            <p>Simple content filter by like count</p>
+        </header>
+
+        <section class="section">
+            <label class="label" for="minLikesInput">Minimum likes</label>
+            <div class="views-controls">
+                <input id="minLikesInput" type="number" min="0" step="100" inputmode="numeric" />
+                <input id="minLikesRange" type="range" min="0" max="10000000" step="100" />
+            </div>
+            <p class="hint" id="likesHint"></p>
+        </section>
+
+        <section class="section">
+            <p class="label">Filter mode</p>
+            <div class="mode-group" role="radiogroup" aria-label="Filter mode">
+                <label class="mode-option">
+                    <input type="radio" name="filterMode" value="blur" />
+                    <span>Blur</span>
+                </label>
+                <label class="mode-option">
+                    <input type="radio" name="filterMode" value="hide" />
+                    <span>Hide</span>
+                </label>
+            </div>
+        </section>
+
+        <section class="section">
+            <p class="label">Platform</p>
+            <div class="platforms">
+                <label><input type="checkbox" id="platformThreads" /> Threads</label>
+                <label><input type="checkbox" id="platformInstagram" /> IG</label>
+                <label><input type="checkbox" id="platformFacebook" /> FB</label>
+            </div>
+        </section>
+
+        <section class="stats" aria-live="polite">
+            <span>Blocked:</span>
+            <strong id="blockedToday">0</strong>
+            <span>posts today</span>
+        </section>
+
+        <section class="logs">
+            <button type="button" class="logs-toggle" id="toggleLogs" aria-expanded="true">
+                <span>LOG</span>
+                <span id="logChevron">▼</span>
+            </button>
+
+            <div class="log-body is-open" id="logBody">
+                <div class="log-toolbar">
+                    <label class="visually-hidden" for="logFilter">Filter logs</label>
+                    <select id="logFilter">
+                        <option value="ALL">ALL</option>
+                        <option value="BLOCK">BLOCK</option>
+                        <option value="ERROR">ERROR</option>
+                    </select>
+                    <div class="toolbar-buttons">
+                        <button type="button" id="copyLogsBtn">Copy All</button>
+                        <button type="button" class="danger" id="clearLogsBtn">Clear</button>
+                    </div>
+                </div>
+
+                <ul id="logList" class="log-list"></ul>
+            </div>
+        </section>
+    </main>
+
+    <script src="helpers.js"></script>
+    <script src="render.js"></script>
+    <script src="popup.js"></script>
+</body>
+
+</html>
