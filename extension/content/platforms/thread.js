@@ -1,11 +1,13 @@
 (() => {
-  window.ViewFilter = window.ViewFilter || {};
-  window.ViewFilter.platforms = window.ViewFilter.platforms || {};
+  window.LikeFilter = window.LikeFilter || {};
+  window.LikeFilter.platforms = window.LikeFilter.platforms || {};
 
   // data-pressable-container is currently the most stable post wrapper on Threads web.
   const POST_SELECTOR = 'div[data-pressable-container="true"]';
-  const LIKE_HINT_REGEX = /(likes?|thích|thich|lượt thích|luot thich|me gusta|j’aime)/i;
-  const ACTION_SIGNAL_REGEX = /(like|thích|reply|trả lời|tra loi|repost|đăng lại|dang lai|share|chia sẻ|chia se)/i;
+  const LIKE_HINT_REGEX =
+    /(likes?|thích|thich|lượt thích|luot thich|me gusta|j’aime)/i;
+  const ACTION_SIGNAL_REGEX =
+    /(like|thích|reply|trả lời|tra loi|repost|đăng lại|dang lai|share|chia sẻ|chia se)/i;
 
   function getPosts(scope) {
     const found = scope.querySelectorAll(POST_SELECTOR);
@@ -22,8 +24,8 @@
         'button[aria-label*="thích" i]',
         '[role="button"][aria-label*="thích" i]',
         '[title*="like" i]',
-        '[title*="thích" i]'
-      ].join(",")
+        '[title*="thích" i]',
+      ].join(","),
     );
 
     for (const node of explicitNodes) {
@@ -33,7 +35,9 @@
       }
     }
 
-    const hintNodes = post.querySelectorAll('span, div[dir="auto"], a, button, [role="button"]');
+    const hintNodes = post.querySelectorAll(
+      'span, div[dir="auto"], a, button, [role="button"]',
+    );
     for (const node of hintNodes) {
       const parsed = parseFromNodeSources(node, parseMetricCount, true);
       if (parsed !== null) {
@@ -80,15 +84,17 @@
         'button[aria-label*="thích" i]',
         '[role="button"][aria-label*="thích" i]',
         '[title*="like" i]',
-        '[title*="thích" i]'
-      ].join(",")
+        '[title*="thích" i]',
+      ].join(","),
     );
 
     if (likeControls.length > 0) {
       return true;
     }
 
-    const textNodes = post.querySelectorAll('span, div[dir="auto"], a, button, [role="button"]');
+    const textNodes = post.querySelectorAll(
+      'span, div[dir="auto"], a, button, [role="button"]',
+    );
     for (const node of textNodes) {
       const signals = readNodeSources(node);
       if (signals.some((value) => LIKE_HINT_REGEX.test(value))) {
@@ -97,7 +103,9 @@
     }
 
     // New posts may hide the like count but still render the interaction row.
-    const actionControls = post.querySelectorAll('button[aria-label], [role="button"][aria-label], a[aria-label]');
+    const actionControls = post.querySelectorAll(
+      'button[aria-label], [role="button"][aria-label], a[aria-label]',
+    );
     let interactionHit = 0;
     for (const control of actionControls) {
       const ariaLabel = control.getAttribute("aria-label") || "";
@@ -131,15 +139,17 @@
 
   function readNodeSources(node) {
     const text = node.textContent ? node.textContent.trim() : "";
-    const ariaLabel = node.getAttribute ? (node.getAttribute("aria-label") || "") : "";
-    const title = node.getAttribute ? (node.getAttribute("title") || "") : "";
+    const ariaLabel = node.getAttribute
+      ? node.getAttribute("aria-label") || ""
+      : "";
+    const title = node.getAttribute ? node.getAttribute("title") || "" : "";
     return [text, ariaLabel, title];
   }
 
-  window.ViewFilter.platforms.threads = {
+  window.LikeFilter.platforms.threads = {
     key: "threads",
     postSelector: POST_SELECTOR,
     getPosts,
-    extractLikes
+    extractLikes,
   };
 })();

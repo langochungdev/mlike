@@ -4,7 +4,7 @@
     WARN: "WARN",
     ERROR: "ERROR",
     BLOCK: "BLOCK",
-    SKIP: "SKIP"
+    SKIP: "SKIP",
   });
 
   function formatTime() {
@@ -38,7 +38,7 @@
         platform: source,
         msg: typeof msg === "string" ? msg : String(msg || ""),
         selector: typeof meta.selector === "string" ? meta.selector : "",
-        element: truncateElement(meta.element)
+        element: truncateElement(meta.element),
       };
 
       sendLog(entry);
@@ -51,11 +51,11 @@
       warn: (msg, meta) => log(LOG_LEVELS.WARN, msg, meta),
       error: (msg, meta) => log(LOG_LEVELS.ERROR, msg, meta),
       block: (msg, meta) => log(LOG_LEVELS.BLOCK, msg, meta),
-      skip: (msg, meta) => log(LOG_LEVELS.SKIP, msg, meta)
+      skip: (msg, meta) => log(LOG_LEVELS.SKIP, msg, meta),
     };
   }
 
-  window.ViewFilter = window.ViewFilter || {};
-  window.ViewFilter.LOG_LEVELS = LOG_LEVELS;
-  window.ViewFilter.createLogger = createLogger;
+  window.LikeFilter = window.LikeFilter || {};
+  window.LikeFilter.LOG_LEVELS = LOG_LEVELS;
+  window.LikeFilter.createLogger = createLogger;
 })();

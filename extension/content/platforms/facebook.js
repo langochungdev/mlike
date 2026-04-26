@@ -1,10 +1,12 @@
 (() => {
-  window.ViewFilter = window.ViewFilter || {};
-  window.ViewFilter.platforms = window.ViewFilter.platforms || {};
+  window.LikeFilter = window.LikeFilter || {};
+  window.LikeFilter.platforms = window.LikeFilter.platforms || {};
 
   // FeedUnit blocks are the main post containers in the modern Facebook feed.
-  const POST_SELECTOR = 'div[role="feed"] > div, div[data-pagelet^="FeedUnit_"]';
-  const LIKE_HINT_REGEX = /(likes?|reactions?|thích|thich|lượt thích|luot thich)/i;
+  const POST_SELECTOR =
+    'div[role="feed"] > div, div[data-pagelet^="FeedUnit_"]';
+  const LIKE_HINT_REGEX =
+    /(likes?|reactions?|thích|thich|lượt thích|luot thich)/i;
 
   function getPosts(scope) {
     const found = scope.querySelectorAll(POST_SELECTOR);
@@ -13,7 +15,7 @@
 
   function extractLikes(post, parseMetricCount) {
     const nodes = post.querySelectorAll(
-      'a[aria-label*="like" i], a[aria-label*="reaction" i], span, div[dir="auto"]'
+      'a[aria-label*="like" i], a[aria-label*="reaction" i], span, div[dir="auto"]',
     );
 
     for (const node of nodes) {
@@ -43,10 +45,10 @@
     return null;
   }
 
-  window.ViewFilter.platforms.facebook = {
+  window.LikeFilter.platforms.facebook = {
     key: "facebook",
     postSelector: POST_SELECTOR,
     getPosts,
-    extractLikes
+    extractLikes,
   };
 })();

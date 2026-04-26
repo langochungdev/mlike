@@ -1,5 +1,5 @@
-const app = window.ViewFilterPopup;
-const render = window.ViewFilterPopupRender;
+const app = window.LikeFilterPopup;
+const render = window.LikeFilterPopupRender;
 
 const state = {
   settings: { ...app.DEFAULT_SETTINGS },
@@ -7,7 +7,7 @@ const state = {
   blockedToday: 0,
   logFilter: "ALL",
   logsOpen: true,
-  saveTimer: null
+  saveTimer: null,
 };
 
 const elements = {
@@ -25,7 +25,7 @@ const elements = {
   logFilter: document.getElementById("logFilter"),
   logList: document.getElementById("logList"),
   copyLogsBtn: document.getElementById("copyLogsBtn"),
-  clearLogsBtn: document.getElementById("clearLogsBtn")
+  clearLogsBtn: document.getElementById("clearLogsBtn"),
 };
 
 init();
@@ -40,7 +40,8 @@ function handleRuntimeMessage(message) {
   if (message?.type === "LOG_EVENT" && message.entry) {
     state.logs.push(message.entry);
     state.logs = state.logs.slice(-app.MAX_LOGS);
-    if (Number.isFinite(message.blockedToday)) state.blockedToday = message.blockedToday;
+    if (Number.isFinite(message.blockedToday))
+      state.blockedToday = message.blockedToday;
     render.renderStats(state, elements, app);
     render.renderLogs(state, elements);
     return;
@@ -64,19 +65,23 @@ async function loadInitialState() {
   try {
     const [settings, logState] = await Promise.all([
       app.sendMessage({ type: "GET_SETTINGS" }),
-      app.sendMessage({ type: "GET_LOG_STATE" })
+      app.sendMessage({ type: "GET_LOG_STATE" }),
     ]);
     state.settings = app.sanitizeSettings(settings || app.DEFAULT_SETTINGS);
-    state.logs = Array.isArray(logState?.logs) ? logState.logs.slice(-app.MAX_LOGS) : [];
+    state.logs = Array.isArray(logState?.logs)
+      ? logState.logs.slice(-app.MAX_LOGS)
+      : [];
     state.blockedToday = Number(logState?.blockedToday || 0);
   } catch (error) {
-    console.error("ViewFilter popup init failed", error);
+    console.error("LikeFilter popup init failed", error);
   }
   render.renderAll(state, elements, app);
 }
 
 function bindEvents() {
-  elements.minLikesRange.addEventListener("input", (event) => setMinLikes(Number(event.target.value), true));
+  elements.minLikesRange.addEventListener("input", (event) =>
+    setMinLikes(Number(event.target.value), true),
+  );
   elements.minLikesInput.addEventListener("input", (event) => {
     const value = Number(event.target.value);
     if (Number.isFinite(value)) setMinLikes(value, true);
@@ -130,11 +135,14 @@ function scheduleSave() {
 
 async function saveSettings() {
   try {
-    const saved = await app.sendMessage({ type: "UPDATE_SETTINGS", settings: state.settings });
+    const saved = await app.sendMessage({
+      type: "UPDATE_SETTINGS",
+      settings: state.settings,
+    });
     state.settings = app.sanitizeSettings(saved || state.settings);
     render.renderSettings(state, elements, app);
   } catch (error) {
-    console.error("ViewFilter save settings failed", error);
+    console.error("LikeFilter save settings failed", error);
   }
 }
 
@@ -149,7 +157,7 @@ async function copyAllLogs() {
     await navigator.clipboard.writeText(text);
     flashButton(elements.copyLogsBtn, "Copied");
   } catch (error) {
-    console.error("ViewFilter copy logs failed", error);
+    console.error("LikeFilter copy logs failed", error);
     flashButton(elements.copyLogsBtn, "Failed");
   }
 }
@@ -162,7 +170,7 @@ async function clearLogs() {
     render.renderStats(state, elements, app);
     render.renderLogs(state, elements);
   } catch (error) {
-    console.error("ViewFilter clear logs failed", error);
+    console.error("LikeFilter clear logs failed", error);
   }
 }
 

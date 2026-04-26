@@ -1,6 +1,6 @@
 (() => {
-  window.ViewFilter = window.ViewFilter || {};
-  window.ViewFilter.platforms = window.ViewFilter.platforms || {};
+  window.LikeFilter = window.LikeFilter || {};
+  window.LikeFilter.platforms = window.LikeFilter.platforms || {};
 
   // Instagram feed and reels both render content units inside article containers.
   const POST_SELECTOR = "article";
@@ -13,7 +13,7 @@
 
   function extractLikes(post, parseMetricCount) {
     const nodes = post.querySelectorAll(
-      'a[href*="/liked_by/"], a[href*="/p/"], span, div[role="button"]'
+      'a[href*="/liked_by/"], a[href*="/p/"], span, div[role="button"]',
     );
 
     for (const node of nodes) {
@@ -43,10 +43,10 @@
     return null;
   }
 
-  window.ViewFilter.platforms.instagram = {
+  window.LikeFilter.platforms.instagram = {
     key: "instagram",
     postSelector: POST_SELECTOR,
     getPosts,
-    extractLikes
+    extractLikes,
   };
 })();

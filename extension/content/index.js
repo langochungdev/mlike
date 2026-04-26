@@ -1,15 +1,22 @@
 (() => {
-  const api = window.ViewFilter || {};
+  const api = window.LikeFilter || {};
   const required = [
-    "platforms", "createDebouncedObserver", "createLogger", "DEFAULT_SETTINGS", "sanitizeSettings",
-    "parseMetricCount", "detectPlatform", "sendMessage", "formatNumber"
+    "platforms",
+    "createDebouncedObserver",
+    "createLogger",
+    "DEFAULT_SETTINGS",
+    "sanitizeSettings",
+    "parseMetricCount",
+    "detectPlatform",
+    "sendMessage",
+    "formatNumber",
   ];
   if (required.some((key) => !api[key])) return;
 
   const CLASS_BLUR = "ext-filtered";
   const CLASS_HIDE = "ext-filtered-hide";
   const CLASS_DEBUG_OPEN = "ext-filtered-debug-open";
-  const STYLE_ID = "viewfilter-style";
+  const STYLE_ID = "LikeFilter-style";
   const ATTR_REVISION = "data-vf-revision";
   const ATTR_STATE = "data-vf-state";
   const ATTR_LIKES = "data-vf-likes";
@@ -20,7 +27,11 @@
 
   const adapter = api.platforms[platformKey];
   const logger = api.createLogger(platformKey);
-  const state = { settings: api.DEFAULT_SETTINGS, revision: "", observer: null };
+  const state = {
+    settings: api.DEFAULT_SETTINGS,
+    revision: "",
+    observer: null,
+  };
 
   injectStyles();
   init();
@@ -28,7 +39,8 @@
   function init() {
     bindDebugInteractions();
 
-    api.sendMessage({ type: "GET_SETTINGS" })
+    api
+      .sendMessage({ type: "GET_SETTINGS" })
       .then((settings) => applySettings(settings, true))
       .catch((error) => {
         logger.error(`Failed to load settings: ${error.message}`);
@@ -36,7 +48,8 @@
       });
 
     chrome.runtime.onMessage.addListener((message) => {
-      if (message?.type === "SETTINGS_UPDATED" && message.settings) applySettings(message.settings, false);
+      if (message?.type === "SETTINGS_UPDATED" && message.settings)
+        applySettings(message.settings, false);
     });
   }
 
@@ -56,7 +69,7 @@
     scanPosts();
     if (!isInitial) {
       logger.info(
-        `Settings updated - threshold: ${api.formatNumber(state.settings.minLikes)} likes, mode: ${state.settings.filterMode}`
+        `Settings updated - threshold: ${api.formatNumber(state.settings.minLikes)} likes, mode: ${state.settings.filterMode}`,
       );
     }
   }
@@ -67,7 +80,11 @@
 
   function startObserver() {
     if (state.observer || !document.body) return;
-    state.observer = api.createDebouncedObserver({ target: document.body, delay: 150, onChange: scanPosts });
+    state.observer = api.createDebouncedObserver({
+      target: document.body,
+      delay: 150,
+      onChange: scanPosts,
+    });
     state.observer.trigger();
   }
 
@@ -90,7 +107,11 @@
   }
 
   function processPost(post) {
-    if (!(post instanceof HTMLElement) || post.getAttribute(ATTR_REVISION) === state.revision) return;
+    if (
+      !(post instanceof HTMLElement) ||
+      post.getAttribute(ATTR_REVISION) === state.revision
+    )
+      return;
 
     const previousState = post.getAttribute(ATTR_STATE) || "";
     const likes = adapter.extractLikes(post, api.parseMetricCount);
@@ -102,7 +123,10 @@
       post.setAttribute(ATTR_REVISION, state.revision);
       post.removeAttribute(ATTR_LIKES);
       if (previousState !== "unknown") {
-        logger.warn("Skipped post - unable to read like count.", { selector: adapter.postSelector, element: post });
+        logger.warn("Skipped post - unable to read like count.", {
+          selector: adapter.postSelector,
+          element: post,
+        });
       }
       return;
     }
@@ -150,10 +174,14 @@
   }
 
   function clearAllFilters() {
-    const filtered = document.querySelectorAll(`.${CLASS_BLUR}, .${CLASS_HIDE}`);
+    const filtered = document.querySelectorAll(
+      `.${CLASS_BLUR}, .${CLASS_HIDE}`,
+    );
     for (const item of filtered) item.classList.remove(CLASS_BLUR, CLASS_HIDE);
 
-    const tracked = document.querySelectorAll(`[${ATTR_STATE}], [${ATTR_REVISION}], [${ATTR_LIKES}]`);
+    const tracked = document.querySelectorAll(
+      `[${ATTR_STATE}], [${ATTR_REVISION}], [${ATTR_LIKES}]`,
+    );
     for (const item of tracked) {
       item.removeAttribute(ATTR_STATE);
       item.removeAttribute(ATTR_REVISION);
@@ -188,7 +216,9 @@
       return;
     }
 
-    const blockedPost = target.closest(`.${CLASS_BLUR}[${ATTR_STATE}="blocked"]`);
+    const blockedPost = target.closest(
+      `.${CLASS_BLUR}[${ATTR_STATE}="blocked"]`,
+    );
     if (!(blockedPost instanceof HTMLElement)) {
       return;
     }
@@ -202,7 +232,7 @@
     const likes = blockedPost.getAttribute(ATTR_LIKES);
     logger.info(
       `Debug unblur - likes: ${likes || "unknown"}, threshold: ${api.formatNumber(state.settings.minLikes)}`,
-      { selector: adapter.postSelector, element: blockedPost }
+      { selector: adapter.postSelector, element: blockedPost },
     );
   }
 })();

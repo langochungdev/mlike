@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "ViewFilter",
+  "name": "LikeFilter",
   "description": "Filter low-like content on Threads, Instagram, and Facebook.",
   "version": "1.0.0",
   "permissions": [
@@ -21,7 +21,7 @@
     "service_worker": "background/service-worker.js"
   },
   "action": {
-    "default_title": "ViewFilter",
+    "default_title": "LikeFilter",
     "default_popup": "popup/popup.html"
   },
   "content_scripts": [

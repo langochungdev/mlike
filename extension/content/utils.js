@@ -5,12 +5,14 @@
     platforms: {
       threads: true,
       instagram: true,
-      facebook: false
-    }
+      facebook: false,
+    },
   };
 
   function sanitizeSettings(input) {
-    const rawMinLikes = Number.isFinite(input?.minLikes) ? input.minLikes : input?.minViews;
+    const rawMinLikes = Number.isFinite(input?.minLikes)
+      ? input.minLikes
+      : input?.minViews;
     return {
       minLikes: Number.isFinite(rawMinLikes)
         ? Math.max(0, Math.round(rawMinLikes))
@@ -28,8 +30,8 @@
         facebook:
           typeof input?.platforms?.facebook === "boolean"
             ? input.platforms.facebook
-            : DEFAULT_SETTINGS.platforms.facebook
-      }
+            : DEFAULT_SETTINGS.platforms.facebook,
+      },
     };
   }
 
@@ -38,13 +40,16 @@
       return null;
     }
 
-    const normalized = rawText.toLowerCase().replace(/\u00a0/g, " ").trim();
+    const normalized = rawText
+      .toLowerCase()
+      .replace(/\u00a0/g, " ")
+      .trim();
     if (!normalized) {
       return null;
     }
 
     const match = normalized.match(
-      /(\d[\d.,\s]*)(?:\s*)(k|m|b|nghìn|ngan|triệu|tr|tỷ|ty)?/i
+      /(\d[\d.,\s]*)(?:\s*)(k|m|b|nghìn|ngan|triệu|tr|tỷ|ty)?/i,
     );
     if (!match) {
       return null;
@@ -65,7 +70,7 @@
       triệu: 1e6,
       tr: 1e6,
       tỷ: 1e9,
-      ty: 1e9
+      ty: 1e9,
     };
 
     return Math.round(numberValue * (multipliers[suffix] || 1));
@@ -131,14 +136,14 @@
     return new Intl.NumberFormat("en-US").format(value);
   }
 
-  window.ViewFilter = window.ViewFilter || {};
-  Object.assign(window.ViewFilter, {
+  window.LikeFilter = window.LikeFilter || {};
+  Object.assign(window.LikeFilter, {
     DEFAULT_SETTINGS,
     sanitizeSettings,
     parseMetricCount,
     parseViewCount: parseMetricCount,
     detectPlatform,
     sendMessage,
-    formatNumber
+    formatNumber,
   });
 })();

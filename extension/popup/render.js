@@ -8,7 +8,9 @@
 
   function renderSettings(state, elements, app) {
     elements.minLikesInput.value = String(state.settings.minLikes);
-    elements.minLikesRange.max = String(Math.max(10000000, state.settings.minLikes));
+    elements.minLikesRange.max = String(
+      Math.max(10000000, state.settings.minLikes),
+    );
     elements.minLikesRange.value = String(state.settings.minLikes);
     elements.likesHint.textContent = `Threshold: ${app.formatNumber(state.settings.minLikes)} likes`;
 
@@ -16,9 +18,15 @@
       radio.checked = radio.value === state.settings.filterMode;
     }
 
-    elements.platformThreads.checked = Boolean(state.settings.platforms.threads);
-    elements.platformInstagram.checked = Boolean(state.settings.platforms.instagram);
-    elements.platformFacebook.checked = Boolean(state.settings.platforms.facebook);
+    elements.platformThreads.checked = Boolean(
+      state.settings.platforms.threads,
+    );
+    elements.platformInstagram.checked = Boolean(
+      state.settings.platforms.instagram,
+    );
+    elements.platformFacebook.checked = Boolean(
+      state.settings.platforms.facebook,
+    );
   }
 
   function renderStats(state, elements, app) {
@@ -33,9 +41,10 @@
 
   function renderLogs(state, elements) {
     const selected = state.logFilter || "ALL";
-    const visibleLogs = selected === "ALL"
-      ? state.logs
-      : state.logs.filter((entry) => entry.level === selected);
+    const visibleLogs =
+      selected === "ALL"
+        ? state.logs
+        : state.logs.filter((entry) => entry.level === selected);
 
     elements.logList.textContent = "";
 
@@ -67,11 +76,11 @@
     elements.logList.appendChild(fragment);
   }
 
-  window.ViewFilterPopupRender = {
+  window.LikeFilterPopupRender = {
     renderAll,
     renderSettings,
     renderStats,
     renderLogPanel,
-    renderLogs
+    renderLogs,
   };
 })();

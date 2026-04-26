@@ -5,14 +5,16 @@
     platforms: {
       threads: true,
       instagram: true,
-      facebook: false
-    }
+      facebook: false,
+    },
   };
 
   const MAX_LOGS = 300;
 
   function sanitizeSettings(input) {
-    const rawMinLikes = Number.isFinite(input?.minLikes) ? input.minLikes : input?.minViews;
+    const rawMinLikes = Number.isFinite(input?.minLikes)
+      ? input.minLikes
+      : input?.minViews;
     return {
       minLikes: Number.isFinite(rawMinLikes)
         ? Math.max(0, Math.round(rawMinLikes))
@@ -30,8 +32,8 @@
         facebook:
           typeof input?.platforms?.facebook === "boolean"
             ? input.platforms.facebook
-            : DEFAULT_SETTINGS.platforms.facebook
-      }
+            : DEFAULT_SETTINGS.platforms.facebook,
+      },
     };
   }
 
@@ -73,13 +75,13 @@
     return `${time} [${level}] [${platform}] ${entry.msg || ""}${selector}`;
   }
 
-  window.ViewFilterPopup = {
+  window.LikeFilterPopup = {
     DEFAULT_SETTINGS,
     MAX_LOGS,
     sanitizeSettings,
     sendMessage,
     formatNumber,
     clampMinLikes,
-    formatLogLine
+    formatLogLine,
   };
 })();

@@ -14,7 +14,7 @@
     observer.observe(target, {
       childList: true,
       subtree: true,
-      characterData: true
+      characterData: true,
     });
 
     return {
@@ -25,10 +25,10 @@
       trigger() {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(onChange, delay);
-      }
+      },
     };
   }
 
-  window.ViewFilter = window.ViewFilter || {};
-  window.ViewFilter.createDebouncedObserver = createDebouncedObserver;
+  window.LikeFilter = window.LikeFilter || {};
+  window.LikeFilter.createDebouncedObserver = createDebouncedObserver;
 })();

@@ -109,7 +109,7 @@ const LOG_LEVELS = { INFO, WARN, ERROR, BLOCK, SKIP }
 
 ```
 ┌─────────────────────────────┐
-│  👁 ViewFilter              │  ← tên + icon đơn giản
+│  👁 LikeFilter              │  ← tên + icon đơn giản
 ├─────────────────────────────┤
 │  Minimum views              │
 │  ┌─────────────┐            │
