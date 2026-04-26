@@ -5,6 +5,7 @@
   // data-pressable-container is currently the most stable post wrapper on Threads web.
   const POST_SELECTOR = 'div[data-pressable-container="true"]';
   const LIKE_HINT_REGEX = /(likes?|thích|thich|lượt thích|luot thich|me gusta|j’aime)/i;
+  const ACTION_SIGNAL_REGEX = /(like|thích|reply|trả lời|tra loi|repost|đăng lại|dang lai|share|chia sẻ|chia se)/i;
 
   function getPosts(scope) {
     const found = scope.querySelectorAll(POST_SELECTOR);
@@ -59,7 +60,53 @@
       return actionMetrics[2];
     }
 
+    // When Threads shows a like action but no number, it effectively means 0 likes.
+    if (hasLikeSignal(post, explicitNodes)) {
+      return 0;
+    }
+
     return null;
+  }
+
+  function hasLikeSignal(post, explicitNodes) {
+    if (explicitNodes.length > 0) {
+      return true;
+    }
+
+    const likeControls = post.querySelectorAll(
+      [
+        'button[aria-label*="like" i]',
+        '[role="button"][aria-label*="like" i]',
+        'button[aria-label*="thích" i]',
+        '[role="button"][aria-label*="thích" i]',
+        '[title*="like" i]',
+        '[title*="thích" i]'
+      ].join(",")
+    );
+
+    if (likeControls.length > 0) {
+      return true;
+    }
+
+    const textNodes = post.querySelectorAll('span, div[dir="auto"], a, button, [role="button"]');
+    for (const node of textNodes) {
+      const signals = readNodeSources(node);
+      if (signals.some((value) => LIKE_HINT_REGEX.test(value))) {
+        return true;
+      }
+    }
+
+    // New posts may hide the like count but still render the interaction row.
+    const actionControls = post.querySelectorAll('button[aria-label], [role="button"][aria-label], a[aria-label]');
+    let interactionHit = 0;
+    for (const control of actionControls) {
+      const ariaLabel = control.getAttribute("aria-label") || "";
+      if (ACTION_SIGNAL_REGEX.test(ariaLabel)) {
+        interactionHit += 1;
+      }
+    }
+
+    return interactionHit >= 2;
   }
 
   function parseFromNodeSources(node, parseMetricCount, requireHint) {
